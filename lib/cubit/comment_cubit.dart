@@ -17,4 +17,14 @@ class CommentCubit extends Cubit<CommentState> {
       emit(CommentErrorState());
     }
   }
+
+  Future<void> sendCommentToPost(Comment comment) async {
+    try {
+      //
+      await commentProvider.postCommentToPost(comment);
+      //
+    } catch (_) {
+      //
+    }
+  }
 }

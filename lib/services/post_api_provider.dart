@@ -7,6 +7,8 @@ class PostProvider {
   Future<List<Post>> getAllPosts() async {
     final responce = await http.get(Uri.parse('https://jsonplaceholder.typicode.com/posts'));
 
+    print('GET: ${json.decode(responce.body)}');
+
     if (responce.statusCode == 200) {
       final List<dynamic> postJson = json.decode(responce.body);
       return postJson.map((json) => Post.fromJson(json)).toList();
@@ -17,6 +19,8 @@ class PostProvider {
 
   Future<Post> getPost(int id) async {
     final responce = await http.get(Uri.parse('https://my-json-server.typicode.com/OVOgenez/db/posts/' + '$id'));
+
+    print('POST: ${json.decode(responce.body)}');
 
     if (responce.statusCode == 200) {
       final dynamic postJson = json.decode(responce.body);

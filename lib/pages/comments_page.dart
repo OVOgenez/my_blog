@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:my_blog/cubit/comment_cubit.dart';
+import 'package:my_blog/models/comment.dart';
 import 'package:my_blog/models/post.dart';
 import 'package:my_blog/services/comment_api_provider.dart';
+import 'package:my_blog/widgets/comment_field.dart';
 import 'package:my_blog/widgets/comment_list.dart';
 
 class CommentsPage extends StatelessWidget {
@@ -38,7 +40,7 @@ class CommentsPage extends StatelessWidget {
                     child: Text(
                       post.title + '\n\n' + post.body,
                       textDirection: TextDirection.ltr,
-                      style: TextStyle(color: Colors.black87, fontSize: 20),
+                      style: TextStyle(color: Colors.black87, fontSize: 16),
                       softWrap: true,
                     ),
                   ),
@@ -48,6 +50,7 @@ class CommentsPage extends StatelessWidget {
               Expanded(
                 child: CommentList(post.id),
               ),
+              CommentField(Comment(postId: post.id)),
             ],
           )),
     );
