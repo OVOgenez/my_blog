@@ -25,20 +25,12 @@ class PostList extends StatelessWidget {
         }
 
         if (state is PostsAllLoadedState) {
-          return ListView.separated(
-            itemCount: state.loadedPost.length,
-            separatorBuilder: (context, index) => Divider(height: 1),
-            itemBuilder: (context, index) => Container(
-              color: index % 2 == 0 ? Colors.white : Colors.blue[50],
-              child: GestureDetector(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) =>
-                            CommentsPage(state.loadedPost[index])),
-                  );
-                },
+          return RefreshIndicator(
+            child: ListView.separated(
+              itemCount: state.loadedPost.length,
+              separatorBuilder: (context, index) => Divider(height: 1),
+              itemBuilder: (context, index) => Container(
+                color: index % 2 == 0 ? Colors.white : Colors.blue[50],
                 child: ListTile(
                   leading: Column(
                     children: [
@@ -59,18 +51,43 @@ class PostList extends StatelessWidget {
                     overflow: TextOverflow.ellipsis,
                   ),
                   trailing: Text('${state.loadedPost[index].user}'),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) =>
+                              CommentsPage(state.loadedPost[index])),
+                    );
+                  },
                 ),
               ),
+              physics: const AlwaysScrollableScrollPhysics(),
             ),
+            onRefresh: () async {
+              postCubit.fetchAllPosts();
+            },
           );
         }
 
         if (state is PostErrorState) {
-          return Center(
-            child: Text(
-              'Error fetching users',
-              style: TextStyle(fontSize: 20),
+          return RefreshIndicator(
+            child: CustomScrollView(
+              slivers: [
+                SliverFillRemaining(
+                  hasScrollBody: false,
+                  child: Center(
+                    child: Text(
+                      'Error fetching users',
+                      style: TextStyle(fontSize: 20),
+                    ),
+                  ),
+                ),
+              ],
+              physics: const AlwaysScrollableScrollPhysics(),
             ),
+            onRefresh: () async {
+              postCubit.fetchAllPosts();
+            },
           );
         }
 
