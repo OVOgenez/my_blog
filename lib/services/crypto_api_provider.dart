@@ -42,9 +42,10 @@ class CryptoProvider {
     };
     var uri = Uri.https(_domen, '/v1/cryptocurrency/quotes/latest', parametrs);
     final responce = await http.get(uri, headers: headers);
+    print(responce.body);
     if (responce.statusCode == 200) {
-      final List<dynamic> cryptoJson = json.decode(responce.body)['data'];
-      return cryptoJson.map((json) => Crypto.fromJson(json)).toList();
+      final Map<String,dynamic> cryptoJson = json.decode(responce.body)['data'];
+      return cryptoJson.values.map((json) => Crypto.fromJson(json)).toList();
     } else {
       throw Exception('Erorr fetching crypto : ${responce.statusCode} - ${responce.reasonPhrase}');
     }
