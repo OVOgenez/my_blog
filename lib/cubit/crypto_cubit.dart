@@ -8,10 +8,20 @@ class CryptoCubit extends Cubit<CryptoState> {
 
   CryptoCubit(this.cryptoProvider) : assert(cryptoProvider != null), super(CryptoLoadingState());
 
-  Future<void> fetchCrypts(start, limit, convert) async {
+  Future<void> fetchCryptoList(start, limit, convert) async {
     try {
       emit(CryptoLoadingState());
-      final List<Crypto> _loadedCryptoList = await cryptoProvider.getCrypts(start, limit, convert);
+      final List<Crypto> _loadedCryptoList = await cryptoProvider.getCryptoList(start, limit, convert);
+      emit(CryptoLoadedState(loadedCrypto: _loadedCryptoList));
+    } catch (_) {
+      emit(CryptoErrorState());
+    }
+  }
+
+  Future<void> fetchCryptoDetails(id, convert) async {
+    try {
+      emit(CryptoLoadingState());
+      final List<Crypto> _loadedCryptoList = await cryptoProvider.getCryptoDetails(id, convert);
       emit(CryptoLoadedState(loadedCrypto: _loadedCryptoList));
     } catch (_) {
       emit(CryptoErrorState());
