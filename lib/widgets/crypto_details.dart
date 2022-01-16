@@ -33,37 +33,34 @@ class CryptoDetails extends StatelessWidget {
               physics: AlwaysScrollableScrollPhysics(),
               itemCount: state.loadedCrypto.length,
               separatorBuilder: (context, index) => Divider(height: 1),
-              itemBuilder: (context, index) => InkWell(
-                onTap: () {},
-                child: ListTile(
-                  tileColor: index % 2 == 0 ? Colors.white : Colors.grey[100],
-                  leading: SizedBox(
-                    width: 50,
-                    child: Column(
-                      children: [
-                        Image.network(
-                          CryptoProvider.getCryptoIconPath(state.loadedCrypto[index].id),
-                          height: 40,
-                          width: 40,
-                        ),
-                        Text(
-                          'id ${state.loadedCrypto[index].id}',
-                          style: TextStyle(fontWeight: FontWeight.bold),
-                        ),
-                      ],
-                    ),
+              itemBuilder: (context, index) => ListTile(
+                tileColor: Colors.white,
+                leading: SizedBox(
+                  width: 64,
+                  child: Column(
+                    children: [
+                      Image.network(
+                        CryptoProvider.getCryptoIconPath(state.loadedCrypto[index].id),
+                        height: 40,
+                        width: 40,
+                      ),
+                      Text(
+                        'id ${state.loadedCrypto[index].id}',
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                    ],
                   ),
-                  title: Text(
-                    '${state.loadedCrypto[index].name}',
-                    style: TextStyle(fontSize: 22),
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  subtitle: Text(
-                    '${state.loadedCrypto[index].symbol}',
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  trailing: Text('${state.loadedCrypto[index].quote['USD']['price']}'),
                 ),
+                title: Text(
+                  '${state.loadedCrypto[index].name}',
+                  style: TextStyle(fontSize: 22),
+                  overflow: TextOverflow.ellipsis,
+                ),
+                subtitle: Text(
+                  '${state.loadedCrypto[index].symbol}',
+                  overflow: TextOverflow.ellipsis,
+                ),
+                trailing: Text('${state.loadedCrypto[index].quote['USD']['price']}'),
               ),
             ),
           );

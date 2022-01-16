@@ -39,7 +39,7 @@ class CryptoList extends StatelessWidget {
                 child: ListTile(
                   tileColor: index % 2 == 0 ? Colors.white : Colors.grey[100],
                   leading: SizedBox(
-                    width: 50,
+                    width: 64,
                     child: Column(
                       children: [
                         Image.network(
