@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 import 'package:my_blog/cubit/crypto_cubit.dart';
 import 'package:my_blog/cubit/crypto_state.dart';
 import 'package:my_blog/pages/crypto_details_page.dart';
@@ -16,80 +17,159 @@ class CryptoList extends StatelessWidget {
       cryptoCubit.fetchCryptoList(1, 100, 'USD');
     }
 
+    var price_formatD2 = NumberFormat.currency(
+      locale: 'ru',
+      symbol: '\$',
+    );
+    var price_formatD8 = NumberFormat.currency(
+      locale: 'ru',
+      symbol: '\$',
+      decimalDigits: 8,
+    );
+    var percent_format = NumberFormat.decimalPercentPattern(
+      locale: 'ru',
+      decimalDigits: 2,
+    );
+
     return BlocBuilder<CryptoCubit, CryptoState>(
       builder: (context, state) {
         if (state is CryptoLoadingState) {
           return Center(
             child: CircularProgressIndicator(),
           );
-        }
-
-        else if (state is CryptoLoadedState) {
+        } else if (state is CryptoLoadedState) {
           return RefreshIndicator(
             onRefresh: () async => cryptoCubit.fetchCryptoList(1, 100, 'USD'),
             child: ListView.separated(
-              physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
+              physics: const BouncingScrollPhysics(
+                  parent: AlwaysScrollableScrollPhysics()),
               itemCount: state.loadedCrypto.length,
               separatorBuilder: (context, index) => Divider(height: 1),
-              itemBuilder: (context, index) => InkWell(
-                onTap: () => Navigator.push(
+              itemBuilder: (context, index) {
+                var price = state.loadedCrypto[index].quote['USD']['price'];
+                var percent24h = state.loadedCrypto[index].quote['USD']
+                    ['percent_change_24h'];
+
+                return InkWell(
+                  onTap: () => Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => CryptoDetailsPage(state.loadedCrypto[index].id)),
+                    MaterialPageRoute(
+                        builder: (context) =>
+                            CryptoDetailsPage(state.loadedCrypto[index].id)),
                   ),
-                child: ListTile(
-                  tileColor: index % 2 == 0 ? Colors.white : Colors.grey[100],
-                  leading: SizedBox(
-                    width: 64,
-                    child: Column(
+                  child: Padding(
+                    padding: const EdgeInsets.all(8),
+                    child: Row(
                       children: [
-                        Image.network(
-                          CryptoProvider.getCryptoIconPath(state.loadedCrypto[index].id),
-                          height: 40,
-                          width: 40,
+                        Padding(
+                          padding: const EdgeInsets.only(right: 8),
+                          child: Image.network(
+                            CryptoProvider.getCryptoIconPath(
+                                state.loadedCrypto[index].id),
+                            height: 48,
+                            width: 48,
+                          ),
                         ),
-                        Text(
-                          'id ${state.loadedCrypto[index].id}',
-                          style: TextStyle(fontWeight: FontWeight.bold),
+                        Expanded(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                crossAxisAlignment: CrossAxisAlignment.end,
+                                children: [
+                                  Text(
+                                    '${state.loadedCrypto[index].name}',
+                                    style: TextStyle(fontSize: 20),
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                  Text(
+                                    (price >= 10)
+                                        ? price_formatD2.format(price)
+                                        : price_formatD8.format(price),
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Row(
+                                    children: [
+                                      Container(
+                                        padding: const EdgeInsets.symmetric(
+                                            vertical: 2, horizontal: 4),
+                                        margin: const EdgeInsets.only(right: 4),
+                                        decoration: BoxDecoration(
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .primary
+                                              .withOpacity(0.5),
+                                          borderRadius:
+                                              BorderRadius.circular(4),
+                                        ),
+                                        child: Text(
+                                          '${index + 1}',
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                      ),
+                                      Text(
+                                        '${state.loadedCrypto[index].symbol}',
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                    ],
+                                  ),
+                                  Row(
+                                    children: [
+                                      Icon(
+                                        (percent24h > 0)
+                                            ? Icons.arrow_drop_up
+                                            : Icons.arrow_drop_down,
+                                        color: (percent24h > 0)
+                                            ? Colors.green
+                                            : Colors.red,
+                                        size: 32,
+                                      ),
+                                      Text(percent_format
+                                          .format(percent24h / 100)),
+                                    ],
+                                  )
+                                ],
+                              )
+                            ],
+                          ),
                         ),
                       ],
                     ),
                   ),
-                  title: Text(
-                    '${state.loadedCrypto[index].name}',
-                    style: TextStyle(fontSize: 22),
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  subtitle: Text(
-                    '${state.loadedCrypto[index].symbol}',
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  trailing: Text('${state.loadedCrypto[index].quote['USD']['price']}'),
-                ),
-              ),
+                );
+              },
             ),
           );
-        }
-
-        else {
-          return LayoutBuilder(
-            builder: (context, constraint) {
-              return RefreshIndicator(
-                onRefresh: () async => cryptoCubit.fetchCryptoList(1, 100, 'USD'),
-                child: SingleChildScrollView(
-                  physics: AlwaysScrollableScrollPhysics(),
-                  child: ConstrainedBox(
-                    constraints: BoxConstraints(minHeight: constraint.maxHeight),
-                    child: Center(
-                      child: Text(
-                        'Error fetching crypto',
-                        style: TextStyle(fontSize: 20),
-                      ),
+        } else {
+          return LayoutBuilder(builder: (context, constraint) {
+            return RefreshIndicator(
+              onRefresh: () async => cryptoCubit.fetchCryptoList(1, 100, 'USD'),
+              child: SingleChildScrollView(
+                physics: AlwaysScrollableScrollPhysics(),
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(minHeight: constraint.maxHeight),
+                  child: Center(
+                    child: Text(
+                      'Error fetching crypto',
+                      style: TextStyle(fontSize: 20),
                     ),
                   ),
                 ),
-              );
-            }
-          );
+              ),
+            );
+          });
         }
       },
     );

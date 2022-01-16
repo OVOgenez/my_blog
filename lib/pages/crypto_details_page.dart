@@ -15,7 +15,6 @@ class CryptoDetailsPage extends StatelessWidget {
     return BlocProvider<CryptoCubit>(
       create: (context) => CryptoCubit(cryptoProvider),
       child: Scaffold(
-        backgroundColor: Colors.white,
         appBar: AppBar(
           title: Text('Crypto Details'),
           centerTitle: true,
