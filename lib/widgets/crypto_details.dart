@@ -28,7 +28,7 @@ class CryptoDetails extends StatelessWidget {
           var crypto = state.loadedCrypto.first;
           double price = crypto.quote['USD']['price'];
           double percent24h = crypto.quote['USD']['percent_change_24h'];
-          double price24h = price - price * (100 - percent24h) / 100;
+          double price24h = price - 100 * price / (100 + percent24h);
           DateTime dateTimeTo =
               DateTime.parse(crypto.quote['USD']['last_updated']);
           DateTime dateTimeFrom = dateTimeTo.subtract(Duration(hours: 24));
