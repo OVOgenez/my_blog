@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:intl/intl.dart';
 import 'package:my_blog/cubit/crypto_cubit.dart';
 import 'package:my_blog/cubit/crypto_state.dart';
 import 'package:my_blog/pages/crypto_details_page.dart';
 import 'package:my_blog/services/crypto_api_provider.dart';
+import 'package:my_blog/models/formats.dart';
 
 class CryptoList extends StatelessWidget {
   bool _fisrtStart = true;
@@ -16,20 +16,6 @@ class CryptoList extends StatelessWidget {
       _fisrtStart = !_fisrtStart;
       cryptoCubit.fetchCryptoList(1, 100, 'USD');
     }
-
-    final price_formatD2 = NumberFormat.currency(
-      locale: 'ru',
-      symbol: '\$',
-    );
-    final price_formatD8 = NumberFormat.currency(
-      locale: 'ru',
-      symbol: '\$',
-      decimalDigits: 8,
-    );
-    final percent_format = NumberFormat.decimalPercentPattern(
-      locale: 'ru',
-      decimalDigits: 2,
-    );
 
     return BlocBuilder<CryptoCubit, CryptoState>(
       builder: (context, state) {
@@ -88,8 +74,8 @@ class CryptoList extends StatelessWidget {
                                   ),
                                   Text(
                                     (price >= 10)
-                                        ? price_formatD2.format(price)
-                                        : price_formatD8.format(price),
+                                        ? Formats.price_formatD2.format(price)
+                                        : Formats.price_formatD8.format(price),
                                     style: TextStyle(
                                       fontSize: 16,
                                       fontWeight: FontWeight.bold,
@@ -138,7 +124,7 @@ class CryptoList extends StatelessWidget {
                                             : Colors.red,
                                         size: 32,
                                       ),
-                                      Text(percent_format
+                                      Text(Formats.percent_format
                                           .format(percent24h / 100)),
                                     ],
                                   ),

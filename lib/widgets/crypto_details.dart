@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:intl/intl.dart';
 import 'package:my_blog/cubit/crypto_cubit.dart';
 import 'package:my_blog/cubit/crypto_state.dart';
+import 'package:my_blog/models/formats.dart';
 
 class CryptoDetails extends StatelessWidget {
   bool _fisrtStart = true;
@@ -17,22 +17,6 @@ class CryptoDetails extends StatelessWidget {
       _fisrtStart = !_fisrtStart;
       cryptoCubit.fetchCryptoDetails(id, 'USD');
     }
-
-    final price_formatD2 = NumberFormat.currency(
-      locale: 'ru',
-      symbol: '\$',
-    );
-    final price_formatD8 = NumberFormat.currency(
-      locale: 'ru',
-      symbol: '\$',
-      decimalDigits: 8,
-    );
-    final percent_format = NumberFormat.decimalPercentPattern(
-      locale: 'ru',
-      decimalDigits: 2,
-    );
-    final datetime_from_format = DateFormat('yyyy-MM-dd');
-    final datetime_to_format = DateFormat('yyyy-MM-dd – HH:mm:ss');
 
     return BlocBuilder<CryptoCubit, CryptoState>(
       builder: (context, state) {
@@ -80,8 +64,8 @@ class CryptoDetails extends StatelessWidget {
                             flex: 6,
                             child: Text(
                               (price >= 10)
-                                  ? price_formatD2.format(price)
-                                  : price_formatD8.format(price),
+                                  ? Formats.price_formatD2.format(price)
+                                  : Formats.price_formatD8.format(price),
                               style: TextStyle(
                                 fontSize: 26,
                                 fontWeight: FontWeight.bold,
@@ -108,7 +92,7 @@ class CryptoDetails extends StatelessWidget {
                                               : Colors.red,
                                         ),
                                         Text(
-                                          percent_format
+                                          Formats.percent_format
                                               .format(percent24h / 100),
                                           style: TextStyle(
                                               color: (percent24h > 0)
@@ -136,8 +120,10 @@ class CryptoDetails extends StatelessWidget {
                                         ),
                                         Text(
                                           (price24h.abs() >= 10)
-                                              ? price_formatD2.format(price24h)
-                                              : price_formatD8.format(price24h),
+                                              ? Formats.price_formatD2
+                                                  .format(price24h)
+                                              : Formats.price_formatD8
+                                                  .format(price24h),
                                           style: TextStyle(
                                               color: (percent24h > 0)
                                                   ? Colors.green
@@ -165,7 +151,8 @@ class CryptoDetails extends StatelessWidget {
                               color: Theme.of(context).colorScheme.primary,
                             ),
                           ),
-                          Text(datetime_from_format.format(dateTimeFrom)),
+                          Text(Formats.datetime_from_format
+                              .format(dateTimeFrom)),
                           Text(
                             ' TO ',
                             style: TextStyle(
@@ -173,10 +160,10 @@ class CryptoDetails extends StatelessWidget {
                               color: Theme.of(context).colorScheme.primary,
                             ),
                           ),
-                          Text(datetime_to_format.format(dateTimeTo)),
+                          Text(Formats.datetime_to_format.format(dateTimeTo)),
                         ],
                       ),
-                    )
+                    ),
                   ],
                 ),
               ),
