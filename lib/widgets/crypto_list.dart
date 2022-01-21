@@ -17,16 +17,16 @@ class CryptoList extends StatelessWidget {
       cryptoCubit.fetchCryptoList(1, 100, 'USD');
     }
 
-    var price_formatD2 = NumberFormat.currency(
+    final price_formatD2 = NumberFormat.currency(
       locale: 'ru',
       symbol: '\$',
     );
-    var price_formatD8 = NumberFormat.currency(
+    final price_formatD8 = NumberFormat.currency(
       locale: 'ru',
       symbol: '\$',
       decimalDigits: 8,
     );
-    var percent_format = NumberFormat.decimalPercentPattern(
+    final percent_format = NumberFormat.decimalPercentPattern(
       locale: 'ru',
       decimalDigits: 2,
     );
