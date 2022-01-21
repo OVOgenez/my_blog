@@ -46,16 +46,18 @@ class CryptoList extends StatelessWidget {
               itemCount: state.loadedCrypto.length,
               separatorBuilder: (context, index) => Divider(height: 1),
               itemBuilder: (context, index) {
-                var price = state.loadedCrypto[index].quote['USD']['price'];
-                var percent24h = state.loadedCrypto[index].quote['USD']
+                double price = state.loadedCrypto[index].quote['USD']['price'];
+                double percent24h = state.loadedCrypto[index].quote['USD']
                     ['percent_change_24h'];
 
                 return InkWell(
                   onTap: () => Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) =>
-                            CryptoDetailsPage(state.loadedCrypto[index].id)),
+                        builder: (context) => CryptoDetailsPage(
+                              state.loadedCrypto[index].id,
+                              state.loadedCrypto[index].name,
+                            )),
                   ),
                   child: Padding(
                     padding: const EdgeInsets.all(8),
@@ -139,9 +141,9 @@ class CryptoList extends StatelessWidget {
                                       Text(percent_format
                                           .format(percent24h / 100)),
                                     ],
-                                  )
+                                  ),
                                 ],
-                              )
+                              ),
                             ],
                           ),
                         ),

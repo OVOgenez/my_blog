@@ -8,7 +8,10 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       theme: ThemeData(
-        colorScheme: ColorScheme.dark()
+        colorScheme: ColorScheme.dark(
+          primary: const Color(0xffbb86fc),
+          secondary: const Color(0xffbb86fc),
+        )
       ),
       debugShowCheckedModeBanner: false,
       home: CryptoListPage(),

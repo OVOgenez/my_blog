@@ -6,9 +6,9 @@ import 'package:my_blog/widgets/crypto_details.dart';
 
 class CryptoDetailsPage extends StatelessWidget {
   final cryptoProvider = CryptoProvider();
-  final id;
+  final id, name;
 
-  CryptoDetailsPage(this.id, {Key key}) : super(key: key);
+  CryptoDetailsPage(this.id, this.name, {Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -16,8 +16,22 @@ class CryptoDetailsPage extends StatelessWidget {
       create: (context) => CryptoCubit(cryptoProvider),
       child: Scaffold(
         appBar: AppBar(
-          title: Text('Crypto Details'),
           centerTitle: true,
+          title: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(right: 8),
+                child: Image.network(
+                  CryptoProvider.getCryptoIconPath(id),
+                  height: 32,
+                  width: 32,
+                ),
+              ),
+              Text('$name'),
+            ],
+          ),
         ),
         body: CryptoDetails(id),
       ),
