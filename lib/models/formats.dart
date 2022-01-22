@@ -14,6 +14,7 @@ abstract class Formats{
     locale: 'ru',
     decimalDigits: 2,
   );
+  static final compact_format = NumberFormat.compact(locale: 'en');
   static final datetime_from_format = DateFormat('yyyy-MM-dd');
   static final datetime_to_format = DateFormat('yyyy-MM-dd – HH:mm:ss');
 }

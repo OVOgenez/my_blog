@@ -58,6 +58,7 @@ class CryptoDetails extends StatelessWidget {
                   child: Column(
                     children: [
                       Container(
+                        padding: const EdgeInsets.all(8),
                         decoration: BoxDecoration(
                           gradient: LinearGradient(
                             begin: Alignment.centerLeft,
@@ -72,7 +73,6 @@ class CryptoDetails extends StatelessWidget {
                           ),
                           borderRadius: BorderRadius.circular(10),
                         ),
-                        padding: const EdgeInsets.all(8),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
@@ -214,7 +214,7 @@ class CryptoDetails extends StatelessWidget {
                                 topTitles: SideTitles(showTitles: false),
                                 bottomTitles: SideTitles(
                                   showTitles: true,
-                                  reservedSize: 22,
+                                  reservedSize: 40,
                                   interval: 1,
                                   getTextStyles: (context, value) => TextStyle(
                                     color: Color(0xff68737d),
@@ -283,6 +283,84 @@ class CryptoDetails extends StatelessWidget {
                           ),
                         ),
                       ),
+                      Center(
+                        child: Text(
+                          'Market Stats',
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                      Container(
+                        padding: const EdgeInsets.all(4),
+                        margin: const EdgeInsets.only(top: 12),
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            begin: Alignment.centerLeft,
+                            end: Alignment.centerRight,
+                            colors: [
+                              Theme.of(context)
+                                  .colorScheme
+                                  .primary
+                                  .withOpacity(0.5),
+                              Colors.transparent,
+                            ],
+                          ),
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: Column(
+                          children: [
+                            _marketStats(
+                              context,
+                              'Circulating Supply',
+                              crypto.circulating_supply,
+                            ),
+                            SizedBox(height: 6),
+                            _marketStats(
+                              context,
+                              'Total Supply',
+                              crypto.total_supply,
+                            ),
+                            SizedBox(height: 6),
+                            _marketStats(
+                              context,
+                              'Max Supply',
+                              crypto.max_supply,
+                            ),
+                            SizedBox(height: 6),
+                            _marketStats(
+                              context,
+                              'Volume 24H',
+                              crypto.quote['USD']['volume_24h'],
+                            ),
+                            SizedBox(height: 6),
+                            _marketStats(
+                              context,
+                              'Volume change 24H',
+                              crypto.quote['USD']['volume_change_24h'],
+                            ),
+                            SizedBox(height: 6),
+                            _marketStats(
+                              context,
+                              'Market Cap',
+                              crypto.quote['USD']['market_cap'],
+                            ),
+                            SizedBox(height: 6),
+                            _marketStats(
+                              context,
+                              'Market Cap Dominance',
+                              crypto.quote['USD']['market_cap_dominance'],
+                            ),
+                            SizedBox(height: 6),
+                            _marketStats(
+                              context,
+                              'Fully Diluted Market Cap',
+                              crypto.quote['USD']['fully_diluted_market_cap'],
+                            ),
+                          ],
+                        ),
+                      ),
                     ],
                   ),
                 ),
@@ -309,6 +387,27 @@ class CryptoDetails extends StatelessWidget {
           });
         }
       },
+    );
+  }
+
+  Widget _marketStats(context, lp, rp) {
+    return Row(
+      children: [
+        Text('$lp  '),
+        Expanded(
+          child: Divider(
+            height: 5,
+            color: Theme.of(context).colorScheme.primary,
+          ),
+        ),
+        Text(
+          (rp != null) ? '  ${Formats.compact_format.format(rp)}' : '  ?',
+          style: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ],
     );
   }
 }
