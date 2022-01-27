@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:my_blog/pages/crypto_list_page.dart';
-import 'package:my_blog/pages/registration_page.dart';
+import 'package:my_blog/widgets/checkbox_field.dart';
 import 'package:my_blog/widgets/input_field.dart';
+import 'package:my_blog/pages/login_page.dart';
 
-class LoginPage extends StatelessWidget {
+class RegistrationPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -15,7 +16,7 @@ class LoginPage extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
-                'Log in',
+                'Registration',
                 style: TextStyle(
                   fontSize: 38,
                   fontWeight: FontWeight.bold,
@@ -23,25 +24,26 @@ class LoginPage extends StatelessWidget {
                 ),
               ),
               SizedBox(height: 28),
+              InputField(labelText: 'Enter your Email'),
+              SizedBox(height: 8),
               InputField(labelText: 'Enter your username'),
               SizedBox(height: 8),
-              InputField(labelText: 'Enter your password', passwordMod: true),
-              SizedBox(height: 28),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  ElevatedButton(
-                    child: Text('Log in'),
-                    onPressed: () => Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => CryptoListPage()),
-                    ),
+              InputField(labelText: 'Enter password', passwordMod: true),
+              SizedBox(height: 8),
+              InputField(labelText: 'Confirm password', passwordMod: true),
+              SizedBox(height: 12),
+              CheckboxField(
+                  title: 'I have read, understood the terms and conditions.'),
+              SizedBox(height: 6),
+              Align(
+                alignment: Alignment.centerLeft,
+                child: ElevatedButton(
+                  child: Text('Registration'),
+                  onPressed: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => CryptoListPage()),
                   ),
-                  TextButton(
-                    child: Text('I forgot my password'),
-                    onPressed: () {},
-                  ),
-                ],
+                ),
               ),
             ],
           ),
@@ -49,11 +51,11 @@ class LoginPage extends StatelessWidget {
       ),
       floatingActionButton: FloatingActionButton.extended(
         backgroundColor: Theme.of(context).colorScheme.primary,
-        label: Text('Registration'),
-        icon: Icon(Icons.person_add),
+        label: Text('Log in'),
+        icon: Icon(Icons.person),
         onPressed: () => Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => RegistrationPage()),
+          MaterialPageRoute(builder: (context) => LoginPage()),
         ),
       ),
     );
