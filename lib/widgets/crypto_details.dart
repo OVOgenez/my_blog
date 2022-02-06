@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:my_blog/cubit/crypto_cubit.dart';
 import 'package:my_blog/cubit/crypto_state.dart';
-import 'package:my_blog/models/formats.dart';
+import 'package:my_blog/formats/formats.dart';
 
 class CryptoDetails extends StatelessWidget {
   bool _fisrtStart = true;

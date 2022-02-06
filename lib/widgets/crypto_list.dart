@@ -4,7 +4,7 @@ import 'package:my_blog/cubit/crypto_cubit.dart';
 import 'package:my_blog/cubit/crypto_state.dart';
 import 'package:my_blog/pages/crypto_details_page.dart';
 import 'package:my_blog/services/crypto_api_provider.dart';
-import 'package:my_blog/models/formats.dart';
+import 'package:my_blog/formats/formats.dart';
 
 class CryptoList extends StatelessWidget {
   bool _fisrtStart = true;
