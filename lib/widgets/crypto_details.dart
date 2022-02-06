@@ -3,7 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:my_blog/cubit/crypto_cubit.dart';
 import 'package:my_blog/cubit/crypto_state.dart';
-import 'package:my_blog/formats/formats.dart';
+import 'package:my_blog/helpers/formats.dart';
+import 'package:my_blog/helpers/settings.dart';
 
 class CryptoDetails extends StatelessWidget {
   bool _fisrtStart = true;
@@ -13,16 +14,23 @@ class CryptoDetails extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final CryptoCubit cryptoCubit = context.watch<CryptoCubit>();
-    if (_fisrtStart) {
-      _fisrtStart = !_fisrtStart;
-      cryptoCubit.fetchCryptoDetails(id, 'USD');
-    }
-
     var graphGradientColors = [
       Theme.of(context).colorScheme.primary,
       Theme.of(context).colorScheme.secondary,
     ];
+    var currency = Settings.currency ? 'EUR' : 'USD';
+    var price_formatD2 = Settings.currency
+        ? Formats.price_EUR_formatD2
+        : Formats.price_USD_formatD2;
+    var price_formatD8 = Settings.currency
+        ? Formats.price_EUR_formatD8
+        : Formats.price_USD_formatD8;
+
+    final CryptoCubit cryptoCubit = context.watch<CryptoCubit>();
+    if (_fisrtStart) {
+      _fisrtStart = !_fisrtStart;
+      cryptoCubit.fetchCryptoDetails(id, currency);
+    }
 
     return BlocBuilder<CryptoCubit, CryptoState>(
       builder: (context, state) {
@@ -30,17 +38,17 @@ class CryptoDetails extends StatelessWidget {
           return Center(child: CircularProgressIndicator());
         } else if (state is CryptoLoadedState) {
           var crypto = state.loadedCrypto.first;
-          double price = crypto.quote['USD']['price'];
-          double percent1h = crypto.quote['USD']['percent_change_1h'];
-          double percent24h = crypto.quote['USD']['percent_change_24h'];
-          double percent7d = crypto.quote['USD']['percent_change_7d'];
-          double percent30d = crypto.quote['USD']['percent_change_30d'];
+          double price = crypto.quote[currency]['price'];
+          double percent1h = crypto.quote[currency]['percent_change_1h'];
+          double percent24h = crypto.quote[currency]['percent_change_24h'];
+          double percent7d = crypto.quote[currency]['percent_change_7d'];
+          double percent30d = crypto.quote[currency]['percent_change_30d'];
           double price1h = price - 100 * price / (100 + percent1h);
           double price24h = price - 100 * price / (100 + percent24h);
           double price7d = price - 100 * price / (100 + percent7d);
           double price30d = price - 100 * price / (100 + percent30d);
           DateTime dateTimeNow =
-              DateTime.parse(crypto.quote['USD']['last_updated']);
+              DateTime.parse(crypto.quote[currency]['last_updated']);
           DateTime dateTimeFrom1h = dateTimeNow.subtract(Duration(hours: 1));
           DateTime dateTimeFrom24h = dateTimeNow.subtract(Duration(hours: 24));
           DateTime dateTimeFrom7d = dateTimeNow.subtract(Duration(days: 7));
@@ -48,7 +56,8 @@ class CryptoDetails extends StatelessWidget {
 
           return LayoutBuilder(builder: (context, constraint) {
             return RefreshIndicator(
-              onRefresh: () async => cryptoCubit.fetchCryptoDetails(id, 'USD'),
+              onRefresh: () async =>
+                  cryptoCubit.fetchCryptoDetails(id, currency),
               child: SingleChildScrollView(
                 physics: AlwaysScrollableScrollPhysics(),
                 child: Container(
@@ -80,8 +89,8 @@ class CryptoDetails extends StatelessWidget {
                               flex: 6,
                               child: Text(
                                 (price >= 10)
-                                    ? Formats.price_formatD2.format(price)
-                                    : Formats.price_formatD8.format(price),
+                                    ? price_formatD2.format(price)
+                                    : price_formatD8.format(price),
                                 style: TextStyle(
                                   fontSize: 26,
                                   fontWeight: FontWeight.bold,
@@ -136,9 +145,9 @@ class CryptoDetails extends StatelessWidget {
                                           ),
                                           Text(
                                             (price24h.abs() >= 10)
-                                                ? Formats.price_formatD2
+                                                ? price_formatD2
                                                     .format(price24h)
-                                                : Formats.price_formatD8
+                                                : price_formatD8
                                                     .format(price24h),
                                             style: TextStyle(
                                                 color: (percent24h > 0)
@@ -332,31 +341,31 @@ class CryptoDetails extends StatelessWidget {
                             _marketStats(
                               context,
                               'Volume 24H',
-                              crypto.quote['USD']['volume_24h'],
+                              crypto.quote[currency]['volume_24h'],
                             ),
                             SizedBox(height: 6),
                             _marketStats(
                               context,
                               'Volume change 24H',
-                              crypto.quote['USD']['volume_change_24h'],
+                              crypto.quote[currency]['volume_change_24h'],
                             ),
                             SizedBox(height: 6),
                             _marketStats(
                               context,
                               'Market Cap',
-                              crypto.quote['USD']['market_cap'],
+                              crypto.quote[currency]['market_cap'],
                             ),
                             SizedBox(height: 6),
                             _marketStats(
                               context,
                               'Market Cap Dominance',
-                              crypto.quote['USD']['market_cap_dominance'],
+                              crypto.quote[currency]['market_cap_dominance'],
                             ),
                             SizedBox(height: 6),
                             _marketStats(
                               context,
                               'Fully Diluted Market Cap',
-                              crypto.quote['USD']['fully_diluted_market_cap'],
+                              crypto.quote[currency]['fully_diluted_market_cap'],
                             ),
                           ],
                         ),
@@ -370,7 +379,8 @@ class CryptoDetails extends StatelessWidget {
         } else {
           return LayoutBuilder(builder: (context, constraint) {
             return RefreshIndicator(
-              onRefresh: () async => cryptoCubit.fetchCryptoDetails(id, 'USD'),
+              onRefresh: () async =>
+                  cryptoCubit.fetchCryptoDetails(id, currency),
               child: SingleChildScrollView(
                 physics: AlwaysScrollableScrollPhysics(),
                 child: ConstrainedBox(

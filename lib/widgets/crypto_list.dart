@@ -4,17 +4,26 @@ import 'package:my_blog/cubit/crypto_cubit.dart';
 import 'package:my_blog/cubit/crypto_state.dart';
 import 'package:my_blog/pages/crypto_details_page.dart';
 import 'package:my_blog/services/crypto_api_provider.dart';
-import 'package:my_blog/formats/formats.dart';
+import 'package:my_blog/helpers/formats.dart';
+import 'package:my_blog/helpers/settings.dart';
 
 class CryptoList extends StatelessWidget {
   bool _fisrtStart = true;
 
   @override
   Widget build(BuildContext context) {
+    var currency = Settings.currency ? 'EUR' : 'USD';
+    var price_formatD2 = Settings.currency
+        ? Formats.price_EUR_formatD2
+        : Formats.price_USD_formatD2;
+    var price_formatD8 = Settings.currency
+        ? Formats.price_EUR_formatD8
+        : Formats.price_USD_formatD8;
+
     final CryptoCubit cryptoCubit = context.watch<CryptoCubit>();
     if (_fisrtStart) {
       _fisrtStart = !_fisrtStart;
-      cryptoCubit.fetchCryptoList(1, 100, 'USD');
+      cryptoCubit.fetchCryptoList(1, 100, currency);
     }
 
     return BlocBuilder<CryptoCubit, CryptoState>(
@@ -25,15 +34,17 @@ class CryptoList extends StatelessWidget {
           );
         } else if (state is CryptoLoadedState) {
           return RefreshIndicator(
-            onRefresh: () async => cryptoCubit.fetchCryptoList(1, 100, 'USD'),
+            onRefresh: () async =>
+                cryptoCubit.fetchCryptoList(1, 100, currency),
             child: ListView.separated(
               physics: const BouncingScrollPhysics(
                   parent: AlwaysScrollableScrollPhysics()),
               itemCount: state.loadedCrypto.length,
               separatorBuilder: (context, index) => Divider(height: 1),
               itemBuilder: (context, index) {
-                double price = state.loadedCrypto[index].quote['USD']['price'];
-                double percent24h = state.loadedCrypto[index].quote['USD']
+                double price =
+                    state.loadedCrypto[index].quote[currency]['price'];
+                double percent24h = state.loadedCrypto[index].quote[currency]
                     ['percent_change_24h'];
 
                 return InkWell(
@@ -74,8 +85,8 @@ class CryptoList extends StatelessWidget {
                                   ),
                                   Text(
                                     (price >= 10)
-                                        ? Formats.price_formatD2.format(price)
-                                        : Formats.price_formatD8.format(price),
+                                        ? price_formatD2.format(price)
+                                        : price_formatD8.format(price),
                                     style: TextStyle(
                                       fontSize: 16,
                                       fontWeight: FontWeight.bold,
@@ -143,7 +154,8 @@ class CryptoList extends StatelessWidget {
         } else {
           return LayoutBuilder(builder: (context, constraint) {
             return RefreshIndicator(
-              onRefresh: () async => cryptoCubit.fetchCryptoList(1, 100, 'USD'),
+              onRefresh: () async =>
+                  cryptoCubit.fetchCryptoList(1, 100, currency),
               child: SingleChildScrollView(
                 physics: AlwaysScrollableScrollPhysics(),
                 child: ConstrainedBox(

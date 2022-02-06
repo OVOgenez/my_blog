@@ -1,11 +1,20 @@
 import 'package:intl/intl.dart';
 
 abstract class Formats{
-  static final price_formatD2 = NumberFormat.currency(
+  static final price_EUR_formatD2 = NumberFormat.currency(
+    locale: 'ru',
+    symbol: '\€',
+  );
+  static final price_EUR_formatD8 = NumberFormat.currency(
+    locale: 'ru',
+    symbol: '\€',
+    decimalDigits: 8,
+  );
+  static final price_USD_formatD2 = NumberFormat.currency(
     locale: 'ru',
     symbol: '\$',
   );
-  static final price_formatD8 = NumberFormat.currency(
+  static final price_USD_formatD8 = NumberFormat.currency(
     locale: 'ru',
     symbol: '\$',
     decimalDigits: 8,
