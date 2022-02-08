@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:my_blog/cubit/settings_cubit.dart';
 import 'package:my_blog/cubit/settings_state.dart';
+import 'package:my_blog/pages/change_password_page.dart';
 
 class SettingsPage extends StatelessWidget {
   @override
@@ -111,7 +112,11 @@ class SettingsPage extends StatelessWidget {
                   ),
                   Divider(height: 1),
                   InkWell(
-                    onTap: () {},
+                    onTap: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => ChangePasswordPage()),
+                    ),
                     borderRadius:
                         BorderRadius.vertical(bottom: Radius.circular(6)),
                     child: Padding(
